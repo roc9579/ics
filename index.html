@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>农历生日</title>
+
+    <script src='./calendar.js'></script>
+    <script>
+
+        function padZero(number) {
+            return number < 10 ? '0' + number : number;
+        }
+
+        //var calendar= require('./calendar.js')
+
+        function c() {
+            document.getElementsByClassName('result')[0].innerHTML = '';
+            var tou = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:生日订阅\n';
+
+            // 输入农历年月日，得出公历信息;输入的必须是数字：如2020年农历的7月初八
+            var year = document.getElementsByClassName('year')[0].value * 1;
+            var month = document.getElementsByClassName('month')[0].value * 1;
+            var day = document.getElementsByClassName('day')[0].value * 1;
+            var name = document.getElementsByClassName('name')[0].value;
+            for (let i = 0; i < 80; i++) {
+                var gongliStr = calendarFormatter.lunar2solar(year + i, month, day);
+                var date = '' + gongliStr.cYear + padZero(gongliStr.cMonth) + padZero(gongliStr.cDay);
+
+                tou = tou + '\nBEGIN:VEVENT\nUID:000' + name + i + '\nDTSTART;TZID=Asia/Shanghai:' + date + 'T060000\nDTEND;TZID=Asia/Shanghai:' + date + 'T060000\nSUMMARY:' + name + '的' + i + '岁农历生日\nBEGIN:VALARM\nACTION:DISPLAY\nTRIGGER:-PT5M\nEND:VALARM\nEND:VEVENT';
+            }
+
+            tou = tou + '\nEND:VCALENDAR';
+
+            document.getElementsByClassName('result')[0].innerHTML = tou;
+        }
+
+    </script>
+</head>
+
+<body>
+    农历：<input class="year">年
+    <input class="month">月
+    <input class="day">日
+    <br><br>姓名：<input class="name">
+    <br><br><button onclick="c()">开始转换</button>
+    <br><br><textarea class="result"></textarea>
+
+
+
+</body>
+
+</html>
